@@ -1,8 +1,8 @@
-# Hell Hustl Gaming Platform
+# Hellzcape Hustle Gaming Platform
 
 A modern, responsive gaming platform with clean architecture and intuitive user experience.
 
-## 🚀 Quick Start
+## Quick Start
 
 1. **Install dependencies:**
    ```bash
