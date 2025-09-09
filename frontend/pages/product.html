@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Game</title>
+    <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+    <style>
+        /* Scoped so it works when injected by the shell */
+        .product-wrap { max-width: 860px; margin: 0 auto; padding: 8px 12px 32px; display: grid; gap: 1rem; }
+        .hero-title { margin: 0; color: var(--accent); font-size: clamp(1.4rem, 3.5vw, 2rem); }
+        .lead { margin: 0; font-size: clamp(1rem, 2.3vw, 1.15rem); opacity: 0.95; }
+        .product-video { width: min(560px, 92vw); aspect-ratio: 16 / 9; background: #000; border-radius: 10px; overflow: hidden; border: 1px solid rgba(245, 252, 182, 0.12); display: grid; place-items: center; }
+        .product-video video { width: 100%; height: 100%; display: block; object-fit: contain; background: #000; }
+        .muted-hint { font-size: 0.9rem; opacity: 0.8; margin: 0; }
+        @media (max-width: 520px) { .product-wrap { padding: 6px 10px 24px; } }
+    </style>
+
+    <section class="product-wrap">
+        <header>
+            <h1 class="hero-title">First-of-its-kind play, forged at RIT</h1>
+            <p class="lead">We’re an indie startup born at Rochester Institute of Technology, building a competitive experience that blends arcade intensity with tactical depth. HellScape Hustle  is the first of its kind—designed to be watched, mastered, and celebrated.</p>
+        </header>
+
+        <figure class="product-video" aria-label="Game teaser">
+            <video controls playsinline muted preload="metadata" poster="/media/graphics/SignForHH.png">
+                <!-- Replace the source below with your teaser file when ready -->
+                <source src="/media/videos/VPX%20Hockey%20Demo.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+        </figure>
+        <p class="muted-hint">Tip: Video starts muted for considerate playback. Unmute to hear the heat.</p>
+
+        <section>
+            <p class="lead">From a student vision to a studio mission, we’re pushing style, speed, and skill expression into new territory. If you’re ready to outplay and outlast—welcome to the Hustle.</p>
+        </section>
+    </section>
+</body>
+</html>

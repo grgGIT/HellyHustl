@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI Tests</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #0e0f14; color: #e6e8ef; margin: 0; padding: 1rem; }
+    h1 { font-size: 1.2rem; margin: 0 0 1rem; }
+    .result { padding: 0.5rem 0.75rem; border-radius: 8px; margin: 0.25rem 0; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; }
+    .pass { background: rgba(46, 204, 113, 0.12); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.35); }
+    .fail { background: rgba(231, 76, 60, 0.12); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.35); }
+    iframe { width: 100%; height: 600px; border: 1px solid #2a2f3a; border-radius: 8px; margin-top: 1rem; background: #fff; }
+    code { color: #e6e8ef; }
+  </style>
+</head>
+<body>
+  <h1>UI Test Runner</h1>
+  <div id="results"></div>
+  <iframe id="app" src="../frontend/main.html" title="App under test"></iframe>
+
+  <script>
+    const results = document.getElementById('results');
+    function report(ok, msg) {
+      const div = document.createElement('div');
+      div.className = 'result ' + (ok ? 'pass' : 'fail');
+      div.textContent = (ok ? 'PASS: ' : 'FAIL: ') + msg;
+      results.appendChild(div);
+    }
+    function assert(cond, msg) {
+      report(!!cond, msg);
+      if (!cond) throw new Error('Assertion failed: ' + msg);
+    }
+
+    const iframe = document.getElementById('app');
+    iframe.addEventListener('load', () => {
+      const w = iframe.contentWindow;
+      const d = w.document;
+
+      try {
+        // Test 1: Top nav renders buttons
+        const topButtons = d.querySelectorAll('#top-nav-list .nav-item-btn');
+        assert(topButtons.length > 0, 'Top nav renders one or more buttons');
+
+        // Test 2: setActive updates content and active state
+        const main = d.getElementById('main-content');
+        const before = (main.textContent || '').trim();
+        const targetBtn = topButtons[1] || topButtons[0];
+        const targetIndex = Math.min(1, topButtons.length - 1);
+        const targetLabel = (targetBtn && targetBtn.textContent || '').trim();
+
+        if (typeof w.setActive === 'function') {
+          w.setActive(targetIndex);
+          const after = (main.textContent || '').trim();
+          assert(after !== before, 'Click/setActive changes main content');
+          const activeBtns = Array.from(d.querySelectorAll('.nav-item-btn.active'));
+          assert(activeBtns.length >= 1, 'At least one button becomes active');
+          assert(activeBtns.every(b => (b.textContent || '').trim() === targetLabel), 'Active buttons match clicked label');
+        } else {
+          assert(false, 'setActive is exposed globally');
+        }
+
+        // Test 3: Side menu toggles via function
+        const sideMenu = d.getElementById('side-menu');
+        const backdrop = d.getElementById('backdrop');
+        if (typeof w.toggleSideMenu === 'function') {
+          w.toggleSideMenu(true);
+          assert(sideMenu.classList.contains('open'), 'Side menu opens');
+          assert(backdrop.hidden === false, 'Backdrop is shown when menu opens');
+          w.toggleSideMenu(false);
+          assert(!sideMenu.classList.contains('open'), 'Side menu closes');
+          assert(backdrop.hidden === true, 'Backdrop is hidden when menu closes');
+        } else {
+          assert(false, 'toggleSideMenu is exposed globally');
+        }
+
+        report(true, 'All tests executed');
+      } catch (e) {
+        report(false, e.message);
+        console.error(e);
+      }
+    });
+  </script>
+</body>
+</html>

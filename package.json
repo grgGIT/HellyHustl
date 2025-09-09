@@ -1,0 +1,19 @@
+{
+  "name": "hell-hustl",
+  "version": "1.0.0",
+  "description": "Hell Hustl Gaming Platform",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
+  },
+  "keywords": ["gaming", "platform", "web"],
+  "author": "Hell Hustl Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hell Hustl - Gaming Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar" class="navbar">
+        <img class="navbar__logo" src="../media/logos/Fallen.png" alt="Hell Hustl Logo" />
+        
+        <!-- Desktop Navigation -->
+        <div class="navbar__nav" aria-label="Primary navigation">
+            <ul id="desktop-nav-list" class="navbar__list"></ul>
+        </div>
+        
+        <!-- Marquee Overlay -->
+        <div id="marquee-overlay" class="navbar__marquee-overlay" aria-hidden="true"></div>
+        
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" 
+                aria-label="Open navigation menu" 
+                aria-controls="mobile-menu" 
+                aria-expanded="false">
+            Menu ☰
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <aside id="mobile-menu" class="mobile-menu" 
+           aria-hidden="true" 
+           aria-labelledby="mobile-menu-toggle">
+        <nav aria-label="Mobile navigation">
+            <ul id="mobile-nav-list" class="mobile-menu__list"></ul>
+        </nav>
+    </aside>
+
+    <!-- Backdrop for mobile menu -->
+    <div id="backdrop" class="backdrop"></div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+        <div class="loading">Loading content</div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="navigation.js"></script>
+</body>
+</html>

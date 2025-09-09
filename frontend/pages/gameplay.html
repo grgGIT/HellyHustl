@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gameplay</title>
+    <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+    <style>
+        /* Scoped styles so they work when injected by the shell */
+        .gp-wrap { display: grid; gap: 1rem; padding: 8px 12px 32px; }
+        .gp-banner {
+            width: min(1100px, 96vw);
+            margin: 0 auto;
+            padding: 14px 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(245, 252, 182, 0.15);
+            background:
+                linear-gradient(135deg, rgba(245, 252, 182, 0.10), rgba(245, 252, 182, 0.03)) padding-box,
+                radial-gradient(1200px 300px at 10% -30%, rgba(245, 252, 182, 0.15), transparent 60%),
+                radial-gradient(1200px 300px at 90% 130%, rgba(255, 105, 80, 0.10), transparent 60%);
+        }
+        .gp-banner__header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+        .gp-banner__title { margin: 0; color: var(--accent); font-size: clamp(1.2rem, 3.5vw, 1.75rem); }
+        .gp-banner__sub { margin: 0.15rem 0 0; opacity: 0.9; font-size: clamp(0.95rem, 2.2vw, 1.05rem); }
+
+        .gp-row { margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+        .tile { background: #0b0b0b; border: 1px solid rgba(245, 252, 182, 0.18); border-radius: 12px; padding: 10px; display: grid; gap: 6px; min-height: 120px; }
+        .tile__thumb { width: 100%; aspect-ratio: 4 / 3; background: #111; border-radius: 10px; border: 1px solid rgba(245, 252, 182, 0.12); display: grid; place-items: center; color: rgba(255,255,255,0.65); font-weight: 700; }
+        .tile__title { margin: 0; color: var(--accent); font-weight: 800; font-size: 1rem; }
+        .tile__text { margin: 0; font-size: 0.95rem; opacity: 0.9; }
+
+        /* Fancy document button */
+        .doc-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .doc-button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.15rem 0.8rem 1rem;
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--accent) 0%, #ffe88a 55%, #ffd86b 100%);
+            color: #000;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            cursor: pointer;
+            box-shadow: 0 8px 26px rgba(245, 252, 182, 0.3), 0 3px 0 rgba(0,0,0,0.18) inset;
+            outline: none;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+            overflow: hidden;
+        }
+        .doc-button:focus-visible { box-shadow: 0 0 0 4px rgba(245, 252, 182, 0.18), 0 8px 26px rgba(245, 252, 182, 0.3); }
+        .doc-button__icon { width: 20px; height: 20px; display: inline-block; }
+        .doc-button__arrow { width: 18px; height: 18px; transform: translateX(0); transition: transform 220ms ease; }
+        .doc-button:hover .doc-button__arrow, .doc-button:focus-visible .doc-button__arrow { transform: translateX(4px); }
+        .doc-button::before {
+            content: "";
+            position: absolute; inset: 0; pointer-events: none;
+            background: radial-gradient(60px 60px at var(--x, -20px) var(--y, -20px), rgba(255,255,255,0.4), transparent 45%);
+            mix-blend-mode: overlay;
+            transition: background-position 180ms ease;
+        }
+        .doc-button:hover::before { --x: 80%; --y: 30%; }
+
+        /* Minor helper for spacing */
+        .mt-4 { margin-top: 1rem; }
+        @media (max-width: 520px) {
+            .gp-wrap { padding: 6px 10px 24px; }
+        }
+
+        /* Art grid */
+        .gp-art-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        .gp-art { background: #0b0b0b; border: 1px solid rgba(245, 252, 182, 0.18); border-radius: 12px; overflow: hidden; }
+        .gp-art a { display: grid; }
+        .gp-art img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 3; display: block; background: #000; }
+        .gp-art figcaption { padding: 8px 10px; font-size: 0.92rem; opacity: 0.9; }
+    </style>
+
+    <section class="gp-wrap">
+        <!-- Overview banner with doc link -->
+        <section class="gp-banner" aria-labelledby="gp-overview-title">
+            <header class="gp-banner__header">
+                <div>
+                    <h1 id="gp-overview-title" class="gp-banner__title">Gameplay Overview</h1>
+                    <p class="gp-banner__sub">Fast, expressive, and built for highlight moments.</p>
+                </div>
+                <div class="doc-actions">
+                    <!-- Replace href with your actual doc link (PDF, Notion, etc.) -->
+                    <a class="doc-button" href="https://docs.google.com/document/d/1imM4apvEIjBph2VtouzdOnaUizZX05mN6xGw5aCgxKA/edit?tab=t.0#heading=h.uir3er6y9vm6" target="_blank" rel="noopener" aria-label="Open gameplay document">
+                        <svg class="doc-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5zM8 11h8v2H8v-2zm0 4h8v2H8v-2zM8 7h4v2H8V7z"/></svg>
+                        <span>Gameplay Doc</span>
+                        <svg class="doc-button__arrow" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 6l6 6-6 6v-4H2v-4h8V6z"/></svg>
+                    </a>
+                </div>
+            </header>
+            <div class="gp-row mt-4">
+                <div class="tile">
+                    <div class="tile__thumb">Loop</div>
+                    <h3 class="tile__title">Core Flow</h3>
+                    <p class="tile__text">Learn the rhythm—earn, upgrade, and outplay.</p>
+                </div>
+                <div class="tile">
+                    <div class="tile__thumb">Style</div>
+                    <h3 class="tile__title">Expression</h3>
+                    <p class="tile__text">Builds that flex your technique and swagger.</p>
+                </div>
+                <div class="tile">
+                    <div class="tile__thumb">Heat</div>
+                    <h3 class="tile__title">Pressure</h3>
+                    <p class="tile__text">Win the moment—make the clip worth sharing.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Characters banner -->
+        <section class="gp-banner" aria-labelledby="gp-characters-title">
+            <header class="gp-banner__header">
+                <div>
+                    <h2 id="gp-characters-title" class="gp-banner__title">Characters</h2>
+                    <p class="gp-banner__sub">Distinct roles, bold identities, and clutch tools.</p>
+                </div>
+            </header>
+            <div class="gp-row mt-4">
+                <div class="tile">
+                    <div class="tile__thumb">A</div>
+                    <h3 class="tile__title">Blitz</h3>
+                    <p class="tile__text">Aggro initiator—sets tempo and opens plays.</p>
+                </div>
+                <div class="tile">
+                    <div class="tile__thumb">B</div>
+                    <h3 class="tile__title">Warden</h3>
+                    <p class="tile__text">Anchor and deny—turns momentum into lockdown.</p>
+                </div>
+                <div class="tile">
+                    <div class="tile__thumb">C</div>
+                    <h3 class="tile__title">Shade</h3>
+                    <p class="tile__text">Flanks, baits, and punishes greedy lines.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Environments banner -->
+        <section class="gp-banner" aria-labelledby="gp-env-title">
+            <header class="gp-banner__header">
+                <div>
+                    <h2 id="gp-env-title" class="gp-banner__title">Environments</h2>
+                    <p class="gp-banner__sub">Spaces that force decisions and create drama.</p>
+                </div>
+            </header>
+            <div class="gp-row mt-4">
+                <div class="tile">
+                    <div class="tile__thumb">1</div>
+                    <h3 class="tile__title">Forge</h3>
+                    <p class="tile__text">Tight lanes, big payoffs—control or get crushed.</p>
+                </div>
+                <div class="tile">
+                    <div class="tile__thumb">2</div>
+                    <h3 class="tile__title">Rotunda</h3>
+                    <p class="tile__text">Sightlines and timing—rotate or risk it all.</p>
+                </div>
+                <div class="tile">
+                    <div class="tile__thumb">3</div>
+                    <h3 class="tile__title">Chasm</h3>
+                    <p class="tile__text">Hazards keep the stakes live every second.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How to Play banner -->
+        <section class="gp-banner" aria-labelledby="gp-how-title">
+            <header class="gp-banner__header">
+                <div>
+                    <h2 id="gp-how-title" class="gp-banner__title">How to Play</h2>
+                    <p class="gp-banner__sub">A sprint of decisions, a marathon of mastery.</p>
+                </div>
+            </header>
+            <div class="gp-row mt-4">
+                <div class="tile">
+                    <div class="tile__thumb">01</div>
+                    <h3 class="tile__title">Enter</h3>
+                    <p class="tile__text">Pick your role, scan the space, set your pace.</p>
+                </div>
+                <div class="tile">
+                    <div class="tile__thumb">02</div>
+                    <h3 class="tile__title">Adapt</h3>
+                    <p class="tile__text">Economy, positioning, and risk—read and react.</p>
+                </div>
+                <div class="tile">
+                    <div class="tile__thumb">03</div>
+                    <h3 class="tile__title">Close</h3>
+                    <p class="tile__text">Convert the moment. Celebrate the outplay.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Art banner -->
+        <section class="gp-banner" aria-labelledby="gp-art-title">
+            <header class="gp-banner__header">
+                <div>
+                    <h2 id="gp-art-title" class="gp-banner__title">Art</h2>
+                    <p class="gp-banner__sub">Concepts and environment studies from development.</p>
+                </div>
+            </header>
+            <div class="gp-art-grid mt-4">
+                <figure class="gp-art">
+                    <a href="/media/art/BBQUNFINISHED.JPG" target="_blank" rel="noopener">
+                        <img loading="lazy" src="/media/art/BBQUNFINISHED.JPG" alt="BBQ (Unfinished)" />
+                    </a>
+                    <figcaption>BBQ (Unfinished)</figcaption>
+                </figure>
+                <figure class="gp-art">
+                    <a href="/media/art/FirstclassfindsUNFINISHED.JPG" target="_blank" rel="noopener">
+                        <img loading="lazy" src="/media/art/FirstclassfindsUNFINISHED.JPG" alt="First Class Finds (Unfinished)" />
+                    </a>
+                    <figcaption>First Class Finds (Unfinished)</figcaption>
+                </figure>
+                <figure class="gp-art">
+                    <a href="/media/art/Fortress.JPG" target="_blank" rel="noopener">
+                        <img loading="lazy" src="/media/art/Fortress.JPG" alt="Fortress" />
+                    </a>
+                    <figcaption>Fortress</figcaption>
+                </figure>
+                <figure class="gp-art">
+                    <a href="/media/art/Hellscape%20revisions%201.png" target="_blank" rel="noopener">
+                        <img loading="lazy" src="/media/art/Hellscape%20revisions%201.png" alt="Hellscape Revisions 1" />
+                    </a>
+                    <figcaption>Hellscape Revisions 1</figcaption>
+                </figure>
+                <figure class="gp-art">
+                    <a href="/media/art/Hellscape%20revisions%202.png" target="_blank" rel="noopener">
+                        <img loading="lazy" src="/media/art/Hellscape%20revisions%202.png" alt="Hellscape Revisions 2" />
+                    </a>
+                    <figcaption>Hellscape Revisions 2</figcaption>
+                </figure>
+                <figure class="gp-art">
+                    <a href="/media/art/NeonNectar.JPG" target="_blank" rel="noopener">
+                        <img loading="lazy" src="/media/art/NeonNectar.JPG" alt="Neon Nectar" />
+                    </a>
+                    <figcaption>Neon Nectar</figcaption>
+                </figure>
+                <figure class="gp-art">
+                    <a href="/media/art/SandsUNFINISHED.JPG" target="_blank" rel="noopener">
+                        <img loading="lazy" src="/media/art/SandsUNFINISHED.JPG" alt="Sands (Unfinished)" />
+                    </a>
+                    <figcaption>Sands (Unfinished)</figcaption>
+                </figure>
+            </div>
+        </section>
+    </section>
+
+    <script>
+        // Animate shimmer position on doc button based on pointer
+        const docBtn = document.querySelector('.doc-button');
+        if (docBtn) {
+            docBtn.addEventListener('pointermove', (e) => {
+                const r = docBtn.getBoundingClientRect();
+                const x = ((e.clientX - r.left) / r.width) * 100;
+                const y = ((e.clientY - r.top) / r.height) * 100;
+                docBtn.style.setProperty('--x', x + '%');
+                docBtn.style.setProperty('--y', y + '%');
+            });
+        }
+    </script>
+</body>
+</html>

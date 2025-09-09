@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About our Studio</title>
+    <style>
+        /* Scoped styles for the About page (injected into page content) */
+        .profiles-section {
+            display: grid;
+            gap: 1.25rem;
+        }
+        .profiles-header {
+            margin-bottom: 0.5rem;
+        }
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .profile-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(245, 252, 182, 0.12);
+            border-radius: 0.8rem;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 96px 1fr;
+            grid-template-areas:
+                "avatar meta"
+                "bio   bio";
+            gap: 0.75rem 1rem;
+        }
+        .profile-bubble {
+            grid-area: avatar;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            border: 2px solid rgba(245, 252, 182, 0.35);
+            background: #3d4855;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 0;
+            outline: none;
+            cursor: pointer;
+            transition: transform 200ms ease, box-shadow 200ms ease;
+            box-shadow: 0 0 0 0 rgba(245, 252, 182, 0.0);
+        }
+        .profile-bubble:hover,
+        .profile-bubble:focus-visible {
+            transform: scale(1.03);
+            box-shadow: 0 0 0 6px rgba(245, 252, 182, 0.08);
+        }
+        .profile-bubble img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .profile-bubble.no-image {
+            background: linear-gradient(135deg, #5b6777, #3d4855);
+        }
+        .profile-meta {
+            grid-area: meta;
+            align-self: center;
+        }
+        .profile-name {
+            margin: 0 0 0.25rem 0;
+            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .profile-role { margin: 0; opacity: 0.9; }
+
+        .profile-bio {
+            grid-area: bio;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: max-height 320ms ease, opacity 220ms ease, transform 220ms ease;
+        }
+        .profile-card.open .profile-bio {
+            max-height: 420px; /* large enough to reveal bio */
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .profile-bio-inner {
+            padding-top: 0.25rem;
+            border-top: 1px solid rgba(245, 252, 182, 0.12);
+        }
+        .profile-links {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .profile-link {
+            color: var(--accent);
+            text-decoration: none;
+            border: 1px solid rgba(245, 252, 182, 0.35);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+        }
+        .profile-link:hover,
+        .profile-link:focus-visible {
+            background: rgba(245, 252, 182, 0.12);
+            color: #fff;
+            border-color: rgba(245, 252, 182, 0.5);
+        }
+        @media (max-width: 520px) {
+            .profile-card { grid-template-columns: 72px 1fr; }
+            .profile-bubble { width: 72px; height: 72px; }
+        }
+    </style>
+</head>
+<body>
+    <style>
+        /* Scoped styles for the About page (duplicated here so styles load with body-only injection) */
+        .profiles-section {
+            display: grid;
+            gap: 1.25rem;
+        }
+        .profiles-header {
+            margin-bottom: 0.5rem;
+        }
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .profile-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(245, 252, 182, 0.12);
+            border-radius: 0.8rem;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 96px 1fr;
+            grid-template-areas:
+                "avatar meta"
+                "bio   bio";
+            gap: 0.75rem 1rem;
+        }
+        .profile-bubble {
+            grid-area: avatar;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            border: 2px solid rgba(245, 252, 182, 0.35);
+            background: #3d4855;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 0;
+            outline: none;
+            cursor: pointer;
+            transition: transform 200ms ease, box-shadow 200ms ease;
+            box-shadow: 0 0 0 0 rgba(245, 252, 182, 0.0);
+        }
+        .profile-bubble:hover,
+        .profile-bubble:focus-visible {
+            transform: scale(1.03);
+            box-shadow: 0 0 0 6px rgba(245, 252, 182, 0.08);
+        }
+        .profile-bubble img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .profile-bubble.no-image {
+            background: linear-gradient(135deg, #5b6777, #3d4855);
+        }
+        .profile-meta {
+            grid-area: meta;
+            align-self: center;
+        }
+        .profile-name {
+            margin: 0 0 0.25rem 0;
+            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .profile-role { margin: 0; opacity: 0.9; }
+
+        .profile-bio {
+            grid-area: bio;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: max-height 320ms ease, opacity 220ms ease, transform 220ms ease;
+        }
+        .profile-card.open .profile-bio {
+            max-height: 420px; /* large enough to reveal bio */
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .profile-bio-inner {
+            padding-top: 0.25rem;
+            border-top: 1px solid rgba(245, 252, 182, 0.12);
+        }
+        .profile-links {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .profile-link {
+            color: var(--accent);
+            text-decoration: none;
+            border: 1px solid rgba(245, 252, 182, 0.35);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+        }
+        .profile-link:hover,
+        .profile-link:focus-visible {
+            background: rgba(245, 252, 182, 0.12);
+            color: #fff;
+            border-color: rgba(245, 252, 182, 0.5);
+        }
+        @media (max-width: 520px) {
+            .profile-card { grid-template-columns: 72px 1fr; }
+            .profile-bubble { width: 72px; height: 72px; }
+        }
+    </style>
+    <section class="profiles-section">
+        <header class="profiles-header">
+            <h1>Our Team</h1>
+            <p>Meet the makers behind Hellscape Hustle. Click a profile to view their bio and links.</p>
+        </header>
+
+        <div class="profiles-grid">
+            <!-- Profile 1 -->
+            <article class="profile-card" data-profile-id="p1">
+                <button class="profile-bubble" aria-expanded="false" onclick="(function(btn){var card=btn.closest('.profile-card');var bio=card.querySelector('.profile-bio');var open=!card.classList.contains('open');card.parentElement.querySelectorAll('.profile-card.open').forEach(function(c){if(c!==card){c.classList.remove('open');var b=c.querySelector('.profile-bio');if(b)b.setAttribute('aria-hidden','true');var pb=c.querySelector('.profile-bubble');if(pb)pb.setAttribute('aria-expanded','false');}});card.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false');if(bio)bio.setAttribute('aria-hidden',open?'false':'true');})(this)">
+                    <img src="../../media/staffPhotos/awkward-smiling-old-man.jpg" alt="Alex - Creative Director" onerror="this.remove(); this.closest('.profile-bubble').classList.add('no-image');" />
+                </button>
+                <div class="profile-meta">
+                    <h3 class="profile-name">Alex Johnson</h3>
+                    <p class="profile-role">Creative Director</p>
+                </div>
+                <div class="profile-bio" aria-hidden="true">
+                    <div class="profile-bio-inner">
+                        <p>Alex leads creative direction and worldbuilding. Passionate about narrative design and player agency.</p>
+                        <div class="profile-links">
+                            <a class="profile-link" href="#" target="_blank" rel="noopener">Portfolio</a>
+                            <a class="profile-link" href="#" target="_blank" rel="noopener">LinkedIn</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Profile 2 -->
+            <article class="profile-card" data-profile-id="p2">
+                <button class="profile-bubble no-image" aria-expanded="false" onclick="(function(btn){var card=btn.closest('.profile-card');var bio=card.querySelector('.profile-bio');var open=!card.classList.contains('open');card.parentElement.querySelectorAll('.profile-card.open').forEach(function(c){if(c!==card){c.classList.remove('open');var b=c.querySelector('.profile-bio');if(b)b.setAttribute('aria-hidden','true');var pb=c.querySelector('.profile-bubble');if(pb)pb.setAttribute('aria-expanded','false');}});card.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false');if(bio)bio.setAttribute('aria-hidden',open?'false':'true');})(this)">
+                    <!-- no image provided -> grey default -->
+                     <img src="../../media/staffPhotos/coolGuy.webp" alt="Alex - Creative Director" onerror="this.remove(); this.closest('.profile-bubble').classList.add('no-image');" />
+                </button>
+                <div class="profile-meta">
+                    <h3 class="profile-name">Sam Samson</h3>
+                    <p class="profile-role">Lead Engineer</p>
+                </div>
+                <div class="profile-bio" aria-hidden="true">
+                    <div class="profile-bio-inner">
+                        <p>Sam architects systems and gameplay loops. Enjoys optimization and tool building.</p>
+                        <div class="profile-links">
+                            <a class="profile-link" href="#" target="_blank" rel="noopener">Portfolio</a>
+                            <a class="profile-link" href="#" target="_blank" rel="noopener">LinkedIn</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Profile 3 -->
+            <article class="profile-card" data-profile-id="p3">
+                <button class="profile-bubble" aria-expanded="false" onclick="(function(btn){var card=btn.closest('.profile-card');var bio=card.querySelector('.profile-bio');var open=!card.classList.contains('open');card.parentElement.querySelectorAll('.profile-card.open').forEach(function(c){if(c!==card){c.classList.remove('open');var b=c.querySelector('.profile-bio');if(b)b.setAttribute('aria-hidden','true');var pb=c.querySelector('.profile-bubble');if(pb)pb.setAttribute('aria-expanded','false');}});card.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false');if(bio)bio.setAttribute('aria-hidden',open?'false':'true');})(this)">
+                    <img src="../../media/staffPhotos/gettyimages-472387652-612x612.jpg" alt="Maya - Art Director" onerror="this.remove(); this.closest('.profile-bubble').classList.add('no-image');" />
+                </button>
+                <div class="profile-meta">
+                    <h3 class="profile-name">Sandra Sandrason</h3>
+                    <p class="profile-role">Art Director</p>
+                </div>
+                <div class="profile-bio" aria-hidden="true">
+                    <div class="profile-bio-inner">
+                        <p>Sandra defines the visual language of our worlds. Loves stylized art and shader magic.</p>
+                        <div class="profile-links">
+                            <a class="profile-link" href="#" target="_blank" rel="noopener">Portfolio</a>
+                            <a class="profile-link" href="#" target="_blank" rel="noopener">LinkedIn</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Profile 4 -->
+            <article class="profile-card" data-profile-id="p4">
+                <button class="profile-bubble no-image" aria-expanded="false" onclick="(function(btn){var card=btn.closest('.profile-card');var bio=card.querySelector('.profile-bio');var open=!card.classList.contains('open');card.parentElement.querySelectorAll('.profile-card.open').forEach(function(c){if(c!==card){c.classList.remove('open');var b=c.querySelector('.profile-bio');if(b)b.setAttribute('aria-hidden','true');var pb=c.querySelector('.profile-bubble');if(pb)pb.setAttribute('aria-expanded','false');}});card.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false');if(bio)bio.setAttribute('aria-hidden',open?'false':'true');})(this)">
+                    <!-- no image provided -> grey default -->
+                     <img src="../../media/staffPhotos/guy2x.jpg" alt="">
+                </button>
+                <div class="profile-meta">
+                    <h3 class="profile-name">Diego Joe</h3>
+                    <p class="profile-role">Gameplay Designer</p>
+                </div>
+                <div class="profile-bio" aria-hidden="true">
+                    <div class="profile-bio-inner">
+                        <p>Diego crafts mechanics and balance. Focused on making systems feel intuitive and rewarding.</p>
+                        <div class="profile-links">
+                            <a class="profile-link" href="#" target="_blank" rel="noopener">Portfolio</a>
+                            <a class="profile-link" href="#" target="_blank" rel="noopener">LinkedIn</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</body>
+</html>
