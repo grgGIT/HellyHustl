@@ -1,4 +1,4 @@
-# Hellzcape Hustle Gaming Platform
+# Hellscape Hustle Gaming Platform
 
 A modern, responsive gaming platform with clean architecture and intuitive user experience.
 
